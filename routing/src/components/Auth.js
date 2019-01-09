@@ -17,6 +17,7 @@ class Auth extends Component {
 
         this.state = {
             user: {},
+            isLoggedIn: false,
             loginError: ''
         }
     }
@@ -33,9 +34,8 @@ class Auth extends Component {
                     id: res.data._id,
                     email: res.data.email,
                     role: res.data.role
-
-
-                }
+                },
+                isLoggedIn: true
             })
         }).catch(error => {
             console.error('Problem authenticating user: ', error)
@@ -50,28 +50,23 @@ class Auth extends Component {
     }
 
     render() {
-        const isLoggedIn = this.state.user.email
+        const isLoggedIn = this.state.isLoggedIn
 
         return (
             <div>
-                {!isLoggedIn && <LoginForm onSubmit={this.handleSignIn} loginError={this.state.loginError} />}
-                {isLoggedIn &&
-                    <Router>
-                        <div>
-                            <Nav />
-                            <Switch>
-                                <Route exact path="/bookmarks" component={BookmarkList} />
-                                <Route exact path="/users" component={Users} />
-                                <Route path="/users/:id" component={Users} />
-                                <Route exact path="/" component={App} />
-                                <Route path="/contact" component={Contact} />
-                                <Route component={Notfound} />
-                            </Switch>
-                        </div>
-                    </Router>
-                }
-
-
+                <Router>
+                    <div>
+                        <Nav isLoggedIn={isLoggedIn} onSubmit={this.handleSignIn} loginError={this.state.loginError} />
+                        <Switch>
+                            <Route exact path="/bookmarks" component={BookmarkList} />
+                            {isLoggedIn && <Route exact path="/users" component={Users} />}
+                            {isLoggedIn && <Route path="/users/:id" component={Users} />}
+                            <Route exact path="/" component={App} />
+                            {isLoggedIn && <Route path="/contact" component={Contact} />}
+                            <Route component={Notfound} />
+                        </Switch>
+                    </div>
+                </Router>
             </div>
         )
     }
