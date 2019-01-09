@@ -6,6 +6,7 @@ const logger = require('morgan');
 const session = require('express-session')
 const passport = require('passport');
 const mongoose = require('mongoose');
+const acl = require('express-acl')
 const User = require('./models/user');
 
 const indexRouter = require('./routes/index');
@@ -38,6 +39,14 @@ mongoose.connect('mongodb://localhost/express-mongo-passport', (err) => {
     console.log('Connected to database!');
   }
 })
+
+// authorization
+acl.config({
+  filename: 'acl.yml',
+  defaultRole: 'guest'
+})
+
+app.use(acl.authorize)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
