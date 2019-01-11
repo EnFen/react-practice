@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Bookmark from './Bookmark';
+import AddBookmarkForm from './AddBookmarkForm'
 import api from '../api/init'
 
 const bookmarkApi = '/bookmarks'
@@ -20,10 +21,18 @@ class BookmarkList extends Component {
         })
     }
 
+    addBookmark = (newBookmark) => {
+        this.setState({
+            bookmarks: [...this.state.bookmarks, newBookmark]
+        })
+    }
+
     render() {
+        const { isLoggedIn, user } = this.props
         return (
             <div>
                 <h1>Bookmarks</h1>
+                {isLoggedIn && <AddBookmarkForm add={this.addBookmark} user={user} />}
                 <ul>
                     {this.state.bookmarks.map(bookmark => {
                         return <Bookmark key={bookmark._id} bookmark={bookmark} />

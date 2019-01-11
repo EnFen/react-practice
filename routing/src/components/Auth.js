@@ -8,8 +8,6 @@ import Contact from './Contact'
 import Nav from './Nav'
 import Notfound from './Notfound'
 import BookmarkList from './BookmarkList';
-import LoginForm from './LoginForm'
-
 
 class Auth extends Component {
     constructor(props) {
@@ -21,7 +19,7 @@ class Auth extends Component {
             loginError: ''
         }
     }
-
+    // Try using async await
     handleSignIn = (event) => {
         event.preventDefault()
         api.post('/auth/login', {
@@ -34,6 +32,7 @@ class Auth extends Component {
                     id: res.data._id,
                     email: res.data.email,
                     role: res.data.role
+
                 },
                 isLoggedIn: true
             })
@@ -50,7 +49,7 @@ class Auth extends Component {
     }
 
     render() {
-        const isLoggedIn = this.state.isLoggedIn
+        const { isLoggedIn } = this.state
 
         return (
             <div>
@@ -58,10 +57,10 @@ class Auth extends Component {
                     <div>
                         <Nav isLoggedIn={isLoggedIn} onSubmit={this.handleSignIn} loginError={this.state.loginError} />
                         <Switch>
-                            <Route exact path="/bookmarks" component={BookmarkList} />
+                            <Route exact path="/bookmarks" render={(props) => { return <BookmarkList {...props} isLoggedIn={isLoggedIn} user={this.user} /> }} />
+                            <Route exact path="/" component={App} />
                             {isLoggedIn && <Route exact path="/users" component={Users} />}
                             {isLoggedIn && <Route path="/users/:id" component={Users} />}
-                            <Route exact path="/" component={App} />
                             {isLoggedIn && <Route path="/contact" component={Contact} />}
                             <Route component={Notfound} />
                         </Switch>
