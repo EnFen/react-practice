@@ -13,7 +13,7 @@ const {
 const app = express()
 
 // const dbConn = 'mongodb://localhost/bookmarks'
-const dbConn = 'mongodb://admin:admin123@ds211440.mlab.com:11440/bookmarks-mern-server'
+const dbConn = `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@ds211440.mlab.com:11440/bookmarks-mern-server`
 
 // parse json
 app.use(express.json())
